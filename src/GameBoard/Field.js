@@ -1,3 +1,3 @@
-export default function Field() {
-  return <button className="square">X</button>;
+export default function Field({id}) {
+  return <button key={id} className="square">{id}</button>;
 }
