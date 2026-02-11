@@ -1,6 +1,6 @@
 import Field from "./Field";
 
-export default function Board({boardHeight, boardWidth}){
+export default function Board({boardHeight, boardWidth, activePlayer, onExecuteTurn}){
     let lastFieldId = 0; // We'll start our ids with "1".
     let boardRows = [];
     
@@ -8,7 +8,7 @@ export default function Board({boardHeight, boardWidth}){
         let columnsCollection = [];
         
         for (let columnIndex = 0; columnIndex < columnsNumber; columnIndex++) {
-            columnsCollection.push(<Field id={++lastFieldId}/>);
+            columnsCollection.push(<Field id={++lastFieldId} activePlayer={activePlayer} onExecuteTurn={onExecuteTurn}/>);
         }
 
         return columnsCollection;
