@@ -19,7 +19,7 @@ export default function Game() {
 	}
 
 	function checkWinner() {
-		function checkRows(){
+		function checkRows() {
 			let winner;
 
 			// Iterate through rows.
@@ -49,7 +49,31 @@ export default function Game() {
 		}
 
 		function checkColumns() {
-			// TODO: Implement logic.
+			let winner;
+
+			// Iterate through columns.
+			for (let columnIndex = 0; columnIndex < boardWidth; columnIndex++) {
+				let potentialWinner = fieldsValues[columnIndex];
+
+				if(potentialWinner !== null){
+					// Iterate through every field in single column.
+					for (let rowIndex = 0; rowIndex < boardHeight; rowIndex++) {
+						if(fieldsValues[firstIndexInColumn + (rowIndex * boardWidth)] !== potentialWinner) {
+							// No winner in this row.
+							potentialWinner = null;
+							break;
+						}
+					}
+				}
+
+				if(potentialWinner !== null){
+					// We've got a winner!
+					winner = potentialWinner;
+					break;
+				}
+			}
+
+			return winner;
 		}
 		
 		function checkSlopes() {
