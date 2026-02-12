@@ -84,10 +84,6 @@ export default function Game() {
 			const winningSlopeSize = Math.min(boardWidth, boardHeight);
 			let winner = null;
 
-			function checkIfWinningSlopeIsPossible(rowIndex, columnIndex) {
-				return (boardHeight - rowIndex >= winningSlopeSize) || (boardWidth - columnIndex >= winningSlopeSize);
-			}
-
 			function checkNextElementInSlopeLeftToRight(testedValue, previousRowIndex, previousColumnIndex) {
 				const currentRowIndex = previousRowIndex + 1;
 				const currentColumnIndex = previousColumnIndex + 1;
@@ -109,8 +105,7 @@ export default function Game() {
 			// Step 1: Checking left-to-right slopes.
 			// In fact, we only need to iterate through first row, and first column.
 			// The recursion of inner function will handle rest of the job.
-			
-			for (let columnIndex = 0; columnIndex < boardWidth; columnIndex++) {
+			for (let columnIndex = 0; columnIndex <= boardWidth - winningSlopeSize; columnIndex++) {
 				if(fieldsValues[columnIndex] !== null && checkNextElementInSlopeLeftToRight(fieldsValues[columnIndex], 0, columnIndex)) {
 					winner = fieldsValues[columnIndex];
 					break;
@@ -118,7 +113,7 @@ export default function Game() {
 			}
 
 			if(winner === null) {
-				for (let rowIndex = 0; rowIndex < boardHeight; rowIndex++) {
+				for (let rowIndex = 0; rowIndex <= boardHeight - winningSlopeSize; rowIndex++) {
 					if(fieldsValues[rowIndex * boardWidth] !== null && checkNextElementInSlopeLeftToRight(fieldsValues[columnIndex * boardWidth], rowIndex, 0)) {
 						winner = fieldsValues[columnIndex * boardWidth];
 						break;
@@ -129,7 +124,7 @@ export default function Game() {
 			// Step 2: Checking right-to-left slopes.
 			// Similar as in previous step, we only check last row, and last column.
 			if(winner === null) {
-				for (let columnIndex = boardWidth - 1; columnIndex >= 0; columnIndex--) {
+				for (let columnIndex = boardWidth - 1; columnIndex >= winningSlopeSize - 1; columnIndex--) {
 					const fieldIndex = columnIndex + (boardWidth * (boardHeight - 1));
 					if(fieldsValues[fieldIndex] !== null && checkNextElementInSlopeRightToLeft(fieldsValues[fieldIndex], boardHeight - 1, columnIndex)) {
 						winner = fieldsValues[fieldIndex];
@@ -139,7 +134,7 @@ export default function Game() {
 			}
 
 			if(winner === null) {
-				for (let rowIndex = boardHeight - 1; rowIndex >= 0; rowIndex--) {
+				for (let rowIndex = boardHeight - 1; rowIndex >= winningSlopeSize - 1; rowIndex--) {
 					const fieldIndex = (boardWidth - 1) + (boardWidth * rowIndex);
 					if(fieldsValues[fieldIndex] !== null && checkNextElementInSlopeRightToLeft(fieldsValues[fieldIndex], rowIndex, boardWidth - 1)) {
 						winner = fieldsValues[fieldIndex];
