@@ -1,15 +1,16 @@
 import Field from "./Field";
 
-export default function Board({boardHeight, boardWidth, activePlayer, onExecuteTurn}){
-    let lastFieldId = 0; // We'll start our ids with "1".
-    let lastRowId = 0; // Same here.
+export default function Board({boardHeight, boardWidth, fieldsValues, onExecuteTurn}){
+    let lastFieldId = -1; // We'll start our ids with "0".
+    let lastRowId = -1; // Same here.
     let boardRows = [];
     
     function createColumns(columnsNumber){
         let columnsCollection = [];
         
         for (let columnIndex = 0; columnIndex < columnsNumber; columnIndex++) {
-            columnsCollection.push(<Field key={++lastFieldId} id={lastFieldId} activePlayer={activePlayer} onExecuteTurn={onExecuteTurn}/>);
+            const fieldId = ++lastFieldId;
+            columnsCollection.push(<Field key={fieldId} id={fieldId} fieldValue={fieldsValues[fieldId]} onExecuteTurn={onExecuteTurn}/>);
         }
         
         return columnsCollection;

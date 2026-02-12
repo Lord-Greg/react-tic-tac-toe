@@ -1,12 +1,8 @@
-import { useState } from "react";
-
-export default function Field({id, activePlayer, onExecuteTurn}) {
-  const [fieldValue, setFieldValue] = useState(null);
+export default function Field({id, fieldValue, onExecuteTurn}) {
 
   const onFieldClick = function() {
     if(fieldValue === null) {
-      setFieldValue(activePlayer);
-      onExecuteTurn();
+      onExecuteTurn(id);
     }
   }
 
