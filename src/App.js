@@ -4,6 +4,7 @@ import Board from "./GameBoard/Board";
 const boardWidth = 3;
 const boardHeight = 3;
 const players = ["X", "O"];
+let gameMessage;
 
 export default function Game() {
 	const [fieldsValues, setFieldsValues] = useState(Array(boardWidth * boardHeight).fill(null));
@@ -15,7 +16,14 @@ export default function Game() {
 	
 	function executeTurn(clickedField) {
 		fieldsValues[clickedField] = getActivePlayer();
-		setGameTurn(gameTurn + 1);
+		const winner = checkWinner();
+		
+		if(winner !== null){
+			gameMessage = "The winner is " + winner + ". Congratulations!"
+		}
+		else{
+			setGameTurn(gameTurn + 1);
+		}
 	}
 
 	function checkWinner() {
@@ -149,5 +157,10 @@ export default function Game() {
 		return checkRows() ?? checkColumns() ?? checkSlopes();
 	}
 	
-	return <Board boardHeight={boardHeight} boardWidth={boardWidth} fieldsValues={fieldsValues} onExecuteTurn={executeTurn}/>;
+	return (
+		<>
+			<label>{gameMessage}</label>
+			<Board boardHeight={boardHeight} boardWidth={boardWidth} fieldsValues={fieldsValues} onExecuteTurn={executeTurn}/>
+		</>
+	)
 }
