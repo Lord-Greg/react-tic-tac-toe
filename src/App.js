@@ -5,6 +5,7 @@ const boardWidth = 3;
 const boardHeight = 3;
 const players = ["X", "O"];
 let gameMessage;
+let gameIsOver = false;
 
 export default function Game() {
 	const [fieldsValues, setFieldsValues] = useState(Array(boardWidth * boardHeight).fill(null));
@@ -15,18 +16,26 @@ export default function Game() {
 	}
 	
 	function executeTurn(clickedField) {
-		fieldsValues[clickedField] = getActivePlayer();
-		const winner = checkWinner();
-		
-		if(winner !== null){
-			gameMessage = "The winner is " + winner + ". Congratulations!"
+		if(gameIsOver){
+			return;
 		}
-		else{
+		
+		let nextFieldsValues = fieldsValues.slice();
+		nextFieldsValues[clickedField] = getActivePlayer();
+		const winner = checkWinner(nextFieldsValues);
+		
+		if(winner !== null) {
+			gameMessage = "The winner is " + winner + ". Congratulations!";
+			gameIsOver = true;
+		}
+		else {
 			setGameTurn(gameTurn + 1);
 		}
+
+		setFieldsValues(nextFieldsValues);
 	}
 
-	function checkWinner() {
+	function checkWinner(fieldsValues) {
 		function checkRows() {
 			let winner;
 
@@ -66,7 +75,7 @@ export default function Game() {
 				if(potentialWinner !== null){
 					// Iterate through every field in single column.
 					for (let rowIndex = 0; rowIndex < boardHeight; rowIndex++) {
-						if(fieldsValues[firstIndexInColumn + (rowIndex * boardWidth)] !== potentialWinner) {
+						if(fieldsValues[columnIndex + (rowIndex * boardWidth)] !== potentialWinner) {
 							// No winner in this row.
 							potentialWinner = null;
 							break;
@@ -114,16 +123,18 @@ export default function Game() {
 			// In fact, we only need to iterate through first row, and first column.
 			// The recursion of inner function will handle rest of the job.
 			for (let columnIndex = 0; columnIndex <= boardWidth - winningSlopeSize; columnIndex++) {
-				if(fieldsValues[columnIndex] !== null && checkNextElementInSlopeLeftToRight(fieldsValues[columnIndex], 0, columnIndex)) {
-					winner = fieldsValues[columnIndex];
+				const fieldIndex = columnIndex;
+				if(fieldsValues[fieldIndex] !== null && checkNextElementInSlopeLeftToRight(fieldsValues[fieldIndex], 0, columnIndex)) {
+					winner = fieldsValues[fieldIndex];
 					break;
 				}
 			}
 
 			if(winner === null) {
 				for (let rowIndex = 0; rowIndex <= boardHeight - winningSlopeSize; rowIndex++) {
-					if(fieldsValues[rowIndex * boardWidth] !== null && checkNextElementInSlopeLeftToRight(fieldsValues[columnIndex * boardWidth], rowIndex, 0)) {
-						winner = fieldsValues[columnIndex * boardWidth];
+					const fieldIndex = rowIndex * boardWidth;
+					if(fieldsValues[fieldIndex] !== null && checkNextElementInSlopeLeftToRight(fieldsValues[fieldIndex], rowIndex, 0)) {
+						winner = fieldsValues[fieldIndex];
 						break;
 					}
 				}
